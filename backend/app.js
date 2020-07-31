@@ -1,8 +1,10 @@
 //Importations
 const express = require('express');
 const bodyParser = require("body-parser");
+const path = require("path");
 
 const userRoutes = require('./routes/user');
+const userPosts = require('./routes/post')
 
 //Création de l'app express
 const app = express();
@@ -18,6 +20,10 @@ app.use((req, res, next) => {
 //Gestion données reçues
 app.use(bodyParser.json());
 
+//Gestion images de manière statique
+app.use('/images', express.static(path.join(__dirname, 'images')));
+
 app.use('/api/user', userRoutes);
+app.use('/api/post', userPosts);
 
 module.exports = app;
