@@ -13,22 +13,22 @@ exports.signup = (req, res) => {
         .then(findUser => {
             if (findUser) {
                 return res.status(401).json({ message: 'Cet utilisateur est déjà enregistré' });
-            } else {
-                const count = password.length;
-                if (count < 8) {
-                    return res.status(401).json({ message: 'Le MDP doit contenir 8 caractères minimum' });
+            } 
+            const count = password.length;
+            if (count < 8) {
+                return res.status(401).json({ message: 'Le MDP doit contenir 8 caractères minimum' });
                 } else {
                     bcrypt.hash(password, 10)
                         .then((hash) => {
-                            models.User.create({ ...userObject,password:hash, imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`})
+                            models.User.create({ ...userObject, password:hash, imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`})
                             .then(() => { res.status(201).json({ message: 'Profil enregistré !'}) })
                             .catch(error => res.status(400).json({ error }));
                         })
                         .catch(error => res.status(500).json({ error }));
                 }
-            }
         })
 }
+    
 
 //Connexion utilisateur
 exports.login = (req, res) => {
@@ -40,7 +40,7 @@ exports.login = (req, res) => {
             bcrypt.compare(req.body.password, user.password)
                 .then(valid => {
                     if (!valid) {
-                        return res.status(401).json({ error: 'Mot de passe incorrect!' });
+                      return res.status(401).json({ error: 'Mot de passe incorrect!' });
                     }
                     return res.status(200).json({ token: jwt.sign({ id: user.id }, config.secret, { expiresIn: '24h'}) });
                 })
@@ -66,7 +66,7 @@ exports.modifyProfile = (req, res) => {
       
 //Suppression du profil
 exports.deleteProfile =  (req, res) => {
-    const user =  models.User.findOne({ where: { id: req.params.id } })
+    models.User.findOne({ where: { id: req.params.id } })
         .then((user) => {
             const filename = user.imageUrl.split('/images/')[1];
             fs.unlink(`images/${filename}`, () => {
