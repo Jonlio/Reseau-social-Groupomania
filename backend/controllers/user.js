@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const models = require('../models');
-//const fs = require('fs');
+const fs = require('fs');
 const config = require('../config/auth.config');
 
 //Création d'un utilisateur
@@ -21,7 +21,7 @@ exports.signup = (req, res) => {
                     bcrypt.hash(password, 10)
                         .then((hash) => {
                             models.User.create({ ...userObject,password:hash, imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`})
-                            .then(() => { res.status(201).json({ message: 'Sauce enregistrée !'}) })
+                            .then(() => { res.status(201).json({ message: 'Profil enregistré !'}) })
                             .catch(error => res.status(400).json({ error }));
                         })
                         .catch(error => res.status(500).json({ error }));
@@ -58,28 +58,19 @@ exports.getProfile = (req, res) => {
 
 //Modification du profil
 exports.modifyProfile = (req, res) => {
-    models.User.findOne({ where: { id: req.params.id } })
-        .then(user => {
-            if (!user) {
-                return res.status(401).json({ error: 'Vous ne pouvez pas modifier ce profil!' });
-            } else {
-                const userObject = req.file ? {
-                    ...JSON.parse(req.body.user),
-                    imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}` } : { ...req.body };
-                models.User.update({ ...userObject }, { where: { id: req.user.id } })
-                return res.status(201).json({ message: 'Votre profil a été mis à jour!' });
+    const userObject = req.file ? { ...JSON.parse(req.body.user), imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`} : { ...req.body };
+                models.User.update({ ...userObject }, { where: { id: req.params.id} })
+                .then(() => res.status(201).json({ message: 'Votre profil a été mis à jour!' }))
+                .catch(error => res.status(400).json({ error }));
             }
-        })
-        .catch(error => res.status(500).json({ error }));
-}
-
+      
 //Suppression du profil
-exports.deleteProfile = (req, res) => {
-    models.User.findOne({ where: { id: req.params.id } })
-        .then(user => {
+exports.deleteProfile =  (req, res) => {
+    const user =  models.User.findOne({ where: { id: req.params.id } })
+        .then((user) => {
             const filename = user.imageUrl.split('/images/')[1];
             fs.unlink(`images/${filename}`, () => {
-                models.User.destroy({ where: { id: req.params.id } })
+                user.destroy()
                     .then(() => res.status(200).json({ message: 'Profil supprimé !' }))
                     .catch(error => res.status(400).json({ error }));
             });
