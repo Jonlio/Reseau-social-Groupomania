@@ -4,11 +4,10 @@ const fs = require('fs');
 //Création d'une publication
 exports.createPost = (req, res) => {
     const postObject = JSON.parse(req.body.post);
-        models.Post.create({ ...postObject,  imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`})
-        .then(() => { res.status(201).json({ message: 'Profil enregistré !'}) })
+        models.Post.create({ ...postObject, imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`})
+        .then(() => { res.status(201).json({ message: 'Publication enregistrée !'}) })
         .catch(error => res.status(400).json({ error }));
 }
-//TODO:Gérer UserId
 
 //Affichage de toutes les publications
 exports.getAllPosts = (req, res) => {
