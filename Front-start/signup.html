@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,
+            viewport-fit=cover">
+    <meta name="robots" content="index, follow">
+
+    <link rel="stylesheet" type="text/css" href="CSS/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="CSS/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+
+    <title>Groupomania</title>
+    <meta name="description" content="Réseau social de l'entreprise Groupomania'">
+</head>
+
+<body>
+    <!--Header-->
+    <header class="navbar navbar-bc-color">
+            <h1>Bienvenue sur le réseau Groupomania</h1> 
+    </header>
+    <!--Connexion-->
+    <main>
+        <section class="formulaire">
+            <h2>Inscription</h2>
+
+            <form id="form">
+                <div class="form-group">
+                    <label for="file">Votre photo de profil</label>
+                    <input type="file" name="image" id="imageUrl">
+                </div>
+
+                <div class="form-group">
+                    <label for="firstName">Votre Prénom</label>
+                    <input type="text" required pattern="[A-Za-z]{2,}" class="form-control" id="firstName">
+                </div>
+
+                <div class="form-group">
+                    <label for="lastName">Votre Nom</label>
+                    <input type="text" required pattern="[A-Za-z]{2,}" class="form-control" id="lastName">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" class="form-control" id="email">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Mot de Passe</label>
+                    <input type="password" required pattern="^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{6,}$" name="password" class="form-control" id="password">
+                </div>
+
+                <button class="btn btn-color" >Connexion</button>
+            </form>
+
+        </section>
+    </main>
+    <script src="js/signup.js"></script>
+</body>
+
+</html>

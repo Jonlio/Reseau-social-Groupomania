@@ -7,28 +7,21 @@ const config = require('../config/auth.config');
 //Création d'un utilisateur
 exports.signup = (req, res) => {
     const userObject = JSON.parse(req.body.user);
-    const password = req.body.password;
 
-    models.User.findOne({ where: { email: req.body.email } })
+    models.User.findOne({ where: { email: userObject.email } })
         .then(findUser => {
             if (findUser) {
                 return res.status(401).json({ message: 'Cet utilisateur est déjà enregistré' });
             } 
-            const count = password.length;
-            if (count < 8) {
-                return res.status(401).json({ message: 'Le MDP doit contenir 8 caractères minimum' });
-                } else {
-                    bcrypt.hash(password, 10)
-                        .then((hash) => {
-                            models.User.create({ ...userObject, password:hash, imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`})
-                            .then(() => { res.status(201).json({ message: 'Profil enregistré !'}) })
-                            .catch(error => res.status(400).json({ error }));
-                        })
-                        .catch(error => res.status(500).json({ error }));
-                }
+                 bcrypt.hash(userObject.password, 10)
+                    .then(() => {
+                        models.User.create({ ...userObject, imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`})
+                        .then(() => { res.status(201).json({ message: 'Profil enregistré !'}) })
+                        .catch(error => res.status(400).json({ error }));
+                    })
+                .catch(error => res.status(500).json({ error }));
         })
 }
-    
 
 //Connexion utilisateur
 exports.login = (req, res) => {
