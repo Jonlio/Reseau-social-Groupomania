@@ -13,9 +13,9 @@ exports.signup = (req, res) => {
             if (findUser) {
                 return res.status(401).json({ message: 'Cet utilisateur est déjà enregistré' });
             } 
-                 bcrypt.hash(userObject.password, 10)
-                    .then(() => {
-                        models.User.create({ ...userObject, imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`})
+                 bcrypt.hash(req.body.password, 10)
+                    .then((hash) => {
+                        models.User.create({ ...userObject, password:hash, imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`})
                         .then(() => { res.status(201).json({ message: 'Profil enregistré !'}) })
                         .catch(error => res.status(400).json({ error }));
                     })

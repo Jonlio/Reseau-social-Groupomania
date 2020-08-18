@@ -11,7 +11,12 @@ exports.createPost = (req, res) => {
 
 //Affichage de toutes les publications
 exports.getAllPosts = (req, res) => {
-    models.Post.findAll()
+    models.Post.findAll({
+        include: [{
+            model: models.User,
+            attributes: ['firstName']
+        }]
+    })
         .then(posts => { return res.status(200).send(posts) })
         .catch(error => res.status(400).json({ error }));
 }
