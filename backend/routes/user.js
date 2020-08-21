@@ -15,4 +15,3 @@ router.delete('/:id',auth, userCtrl.deleteProfile);
 
 module.exports = router;
 
-//TODO: Authentifier les routes

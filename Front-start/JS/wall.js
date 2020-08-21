@@ -1,5 +1,3 @@
-// TODO: afficher le firstName du modèle User à la place du userId
-
 const content = document.getElementById('content');
 const fileField = document.querySelector('input[type=file]')
 const btn = document.getElementById('btn');
@@ -51,15 +49,11 @@ const urlPosts = 'http://localhost:3000/api/post'
 const displayPosts = async () => {
     const posts = await getPosts(urlPosts);
     for (let i = posts.length - 1; i >= 0; i--) {
-        const {
-            userId,
-            content,
-            imageUrl
-        } = posts[i]
-
-        renderPost(userId, imageUrl, content)
+        const { userId, User, content, imageUrl } = posts[i]
+        renderPost(userId, User,imageUrl, content)
     }
 }
+
 // Récupération datas posts
 const getPosts = async (url) => {
     try {
@@ -76,13 +70,13 @@ const getPosts = async (url) => {
     }
 }
 
-const renderPost = (userId, imageUrl, postContent) => {
+const renderPost = (userId, User, imageUrl, postContent) => {
     const section = document.getElementById('post');
     const article = document.createElement('article');
 
     article.innerHTML = `
         <div class="post">
-            <p>Publication de: ${userId}</p>
+            <p>Publication de: ${User.firstName}</p>
             <a href="post.html?"><p>${postContent}</p>
             <img src="${imageUrl}"></a>
         </div>    `

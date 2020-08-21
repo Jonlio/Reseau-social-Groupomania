@@ -1,12 +1,19 @@
 const models = require('../models');
 const fs = require('fs');
+const jwt = require('jsonwebtoken');
+const config = require('../config/auth.config');
 
 //Création d'une publication
 exports.createPost = (req, res) => {
     const postObject = JSON.parse(req.body.post);
-        models.Post.create({ ...postObject, imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`})
+    const authorizationHeader = req.headers.authorization;
+    if(authorizationHeader){
+        const token = req.headers.authorization.split(' ')[1]; // Bearer <token>
+        result = jwt.verify(token, config.secret);
+        models.Post.create({ ...postObject, userId:result.id ,imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`})
         .then(() => { res.status(201).json({ message: 'Publication enregistrée !'}) })
         .catch(error => res.status(400).json({ error }));
+    }
 }
 
 //Affichage de toutes les publications
@@ -17,8 +24,8 @@ exports.getAllPosts = (req, res) => {
             attributes: ['firstName']
         }]
     })
-        .then(posts => { return res.status(200).send(posts) })
-        .catch(error => res.status(400).json({ error }));
+    .then(posts => {  return res.status(200).send(posts) })
+    .catch(error => res.status(400).json({ error }));
 }
 
 //Affichage d'une publication
