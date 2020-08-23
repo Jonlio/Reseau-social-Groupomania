@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
   });
   Post.associate = function(models) {
     models.Post.belongsTo(models.User, {
-    foreignKey: models.User.userId
+    foreignKey: { allownull: false }
   });
   models.Post.hasMany(models.Comment)
   }

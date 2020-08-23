@@ -8,7 +8,7 @@ exports.createPost = (req, res) => {
     const postObject = JSON.parse(req.body.post);
     const authorizationHeader = req.headers.authorization;
     if(authorizationHeader){
-        const token = req.headers.authorization.split(' ')[1]; // Bearer <token>
+        const token = req.headers.authorization.split(' ')[1]; 
         result = jwt.verify(token, config.secret);
         models.Post.create({ ...postObject, userId:result.id ,imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`})
         .then(() => { res.status(201).json({ message: 'Publication enregistrée !'}) })

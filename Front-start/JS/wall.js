@@ -5,52 +5,42 @@ const btn = document.getElementById('btn');
 const url = 'http://localhost:3000/api/post';
 const token = 'Bearer ' + sessionStorage.getItem('token');
 
-// Création datas Post 
-const createData = async (url, formData) => {
-    try {
-        const response = await fetch(url, {
-            headers: {
-                'Authorization': token
-            },
-            method: 'POST',
-            body: formData
-        })
-        return await response.json()
-    } catch (err) {
-        throw new Error(err)
-    }
+// Création post
+const createPost = async () => {
+    btn.addEventListener('click', async (e) => {
+        try {
+            e.preventDefault();
+            if (content.value.length > 0) {
+                const formData = new FormData();
+                const post = { content: content.value }
+                formData.append('post', JSON.stringify(post))
+                if (fileField.files[0]) formData.append('image', fileField.files[0])
+                const response = await fetch(url, {
+                    headers: {
+                        'Authorization': token
+                    },
+                    method: 'POST',
+                    body: formData
+                })
+                window.location.reload(true)
+                return await response.json()
+            }
+        } catch (err) {
+            throw new Error(err)
+        }
+    })
 }
 
-// Création Post
-btn.addEventListener('click', async (e) => {
-    try {
-        e.preventDefault();
-
-        if (content.value.length > 0) {
-            const formData = new FormData();
-            const post = {
-                content: content.value
-            }
-            formData.append('post', JSON.stringify(post))
-            if (fileField.files[0]) formData.append('image', fileField.files[0])
-            const data = await createData(url, formData)
-            content.value = "";
-            window.location.reload(true)
-            return console.log(data.message)
-        }
-    } catch (err) {
-        throw new Error(err)
-    }
-})
-
-// GET POSTS
 // Affichage des posts
-const urlPosts = 'http://localhost:3000/api/post'
 const displayPosts = async () => {
-    const posts = await getPosts(urlPosts);
+    const posts = await getPosts(url);
     for (let i = posts.length - 1; i >= 0; i--) {
-        const { userId, User, content, imageUrl } = posts[i]
-        renderPost(userId, User,imageUrl, content)
+        const {
+            User,
+            content,
+            imageUrl, id
+        } = posts[i]
+        renderPost(User, imageUrl, content, id)
     }
 }
 
@@ -70,18 +60,38 @@ const getPosts = async (url) => {
     }
 }
 
-const renderPost = (userId, User, imageUrl, postContent) => {
+const renderPost = (User, imageUrl, postContent, postId) => {
+    
     const section = document.getElementById('post');
-    const article = document.createElement('article');
-
-    article.innerHTML = `
-        <div class="post">
-            <p>Publication de: ${User.firstName}</p>
-            <a href="post.html?"><p>${postContent}</p>
-            <img src="${imageUrl}"></a>
-        </div>    `
-
-    section.appendChild(article)
+    const div = document.createElement('div');
+    div.classList.add("postDisplay");
+    const firstName = document.createElement('h3');
+    const link = document.createElement('a');
+    const textContent = document.createElement('p');
+    const img = document.createElement('img');
+   
+    firstName.innerHTML += User.firstName + ' à publié:';
+    textContent.innerHTML += postContent;
+    img.src = imageUrl;
+    
+    section.appendChild(div);
+    div.appendChild(firstName)
+    div.appendChild(link)
+    link.appendChild(textContent)
+    link.appendChild(img)
+    div.appendChild(link)
+    
+    link.addEventListener('click', function(e) {
+           sessionStorage.setItem('post', postId);
+           document.location.href = 'post.html'  
+        })
 }
 
-displayPosts()
+createPost();
+displayPosts();
+
+
+
+
+
+
