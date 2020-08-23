@@ -34,7 +34,31 @@ exports.getPost = (req, res) => {
         .then(post => { return res.status(200).send(post) })
         .catch(error => res.status(400).json({ error }));
 }
-
+/*
+models.Message.findOne({
+    where: { id: req.params.id },
+    include: [{
+            model: models.User,
+            attributes: ['username']
+        },
+        {
+            model: models.Comment,
+            attributes: ['content', 'id'],
+            include: [{
+                model: models.User,
+                attributes: ['username']
+            }]
+        }
+    ]
+})
+.then(message => { res.status(200).json(message); })
+.catch((error) => {
+    res.status(400).json({
+        error: error,
+        message: 'Impossible de récupérer le messages'
+    });
+});
+*/
 //Suppression d'une publication
 exports.deletePost =  (req, res) => {
     models.Post.findOne({ where: { id: req.params.id } })
