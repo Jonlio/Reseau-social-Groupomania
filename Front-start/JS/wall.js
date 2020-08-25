@@ -41,7 +41,7 @@ const displayPosts = async () => {
             imageUrl, id
         } = posts[i]
         renderPost(User, imageUrl, content, id)
-    }
+    } 
 }
 
 // Récupération datas posts

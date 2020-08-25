@@ -24,10 +24,24 @@
     <!--Post-->
     <main>
         <section class="formulaire">
-            <h2>Votre post:</h2>
-            <div id="post"></div>
+            <h2>Post sélectionné:</h2>
+            <div id="post">
+            </div>
+            <button class="btn btn-color" onclick='deletePost()'>Supprimer</button>
         </section>
+        
+        <section id='msg'>
+                <h4>Commentez:</h4>
+                <div id='comments'></div>
+                <div id='com'>
+                    <textarea name="comment" id="comment" rows="2" cols="50 "></textarea>
+                </div>
+                <button class="btn btn-color" onclick='postComment()'>Commenter</button>
+        </section>
+        
     </main>
+    
+
     <script src="js/post.js"></script>
 </body>
 

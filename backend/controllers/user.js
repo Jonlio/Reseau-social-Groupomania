@@ -7,7 +7,6 @@ const config = require('../config/auth.config');
 //Création d'un utilisateur
 exports.signup = (req, res) => {
     const userObject = JSON.parse(req.body.user);
-
     models.User.findOne({ where: { email: userObject.email } })
         .then(findUser => {
             if (findUser) {

@@ -6,10 +6,9 @@ const Comment = sequelize.define('Comment', {
     commentId: DataTypes.INTEGER
     });
 Comment.associate = function(models) {
-    models.Comment.belongsTo(models.Post, { foreignKey: { allownull:false } });
-    models.Comment.belongsTo(models.User, { foreignKey: { allownull:false } });
+    models.Comment.belongsTo(models.Post, { foreignKey: models.Post.postId });
+    models.Comment.belongsTo(models.User, { foreignKey: models.User.userId });
 }
     return Comment;
 }
 
- 

@@ -20,8 +20,7 @@ exports.createPost = (req, res) => {
 exports.getAllPosts = (req, res) => {
     models.Post.findAll({
         include: [{
-            model: models.User,
-            attributes: ['firstName']
+            model: models.User
         }]
     })
     .then(posts => {  return res.status(200).send(posts) })
@@ -30,35 +29,32 @@ exports.getAllPosts = (req, res) => {
 
 //Affichage d'une publication
 exports.getPost = (req, res) => {
-    models.Post.findOne({ where: { id: req.params.id } })
-        .then(post => { return res.status(200).send(post) })
-        .catch(error => res.status(400).json({ error }));
-}
-/*
-models.Message.findOne({
-    where: { id: req.params.id },
-    include: [{
+    models.Post.findOne({
+        where: { id: req.params.id },
+        include: [{
             model: models.User,
-            attributes: ['username']
+            attributes: ['firstName']
         },
-        {
+        /*{
             model: models.Comment,
-            attributes: ['content', 'id'],
+            attributes: ['content', 'commentId'],
             include: [{
                 model: models.User,
-                attributes: ['username']
+                attributes: ['firstName']
             }]
-        }
+        }*/
     ]
-})
-.then(message => { res.status(200).json(message); })
-.catch((error) => {
-    res.status(400).json({
-        error: error,
-        message: 'Impossible de récupérer le messages'
+    })
+    .then(post => { res.status(200).json(post); })
+    .catch((error) => {
+        res.status(400).json({
+            error: error,
+            message: 'Impossible de récupérer le messages'
+        });
     });
-});
-*/
+
+}
+
 //Suppression d'une publication
 exports.deletePost =  (req, res) => {
     models.Post.findOne({ where: { id: req.params.id } })
