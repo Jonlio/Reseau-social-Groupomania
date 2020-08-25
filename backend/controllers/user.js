@@ -43,9 +43,14 @@ exports.login = (req, res) => {
 
 //Affichage d'un profil
 exports.getProfile = (req, res) => {
-    models.User.findOne({ where: { id: req.params.id } })
+    const authorizationHeader = req.headers.authorization;
+    if(authorizationHeader){
+        const token = req.headers.authorization.split(' ')[1]; 
+        result = jwt.verify(token, config.secret);
+    models.User.findOne({ where: { id: result.id } })
         .then(user => { return res.status(200).send(user) })
         .catch(error => res.status(400).json({ error }));
+}
 }
 
 //Modification du profil
@@ -58,7 +63,11 @@ exports.modifyProfile = (req, res) => {
       
 //Suppression du profil
 exports.deleteProfile =  (req, res) => {
-    models.User.findOne({ where: { id: req.params.id } })
+    const authorizationHeader = req.headers.authorization;
+    if(authorizationHeader){
+        const token = req.headers.authorization.split(' ')[1]; 
+        result = jwt.verify(token, config.secret);
+    models.User.findOne({ where: { id: result.id} })
         .then((user) => {
             const filename = user.imageUrl.split('/images/')[1];
             fs.unlink(`images/${filename}`, () => {
@@ -69,3 +78,4 @@ exports.deleteProfile =  (req, res) => {
         })
         .catch(error => res.status(500).json({ error }));
 };
+}

@@ -19,31 +19,22 @@
     <!--Header-->
     <header class="navbar navbar-bc-color">
             <h1>Réseau Groupomania</h1>
-        <a href='profil.html'><p>Mon profil</p></a>
     </header>
     
     <!--Post-->
     <main>
         <section class="formulaire">
-            <h2>Post sélectionné:</h2>
-            <div id="post">
+            <h2>Mon profil:</h2>
+            <div id="profil">
             </div>
-            <button class="btn btn-color" onclick='deletePost()'>Supprimer</button>
+            <button class="btn btn-color" onclick='deleteProfil()'>Supprimer mon profil</button>
         </section>
-        
-        <section id='msg'>
-                <h4>Commentez:</h4>
-                <div id='comments'></div>
-                <div id='com'>
-                    <textarea name="comment" id="comment" rows="2" cols="50 "></textarea>
-                </div>
-                <button class="btn btn-color" onclick='postComment()'>Commenter</button>
-        </section>
+       
         
     </main>
     
 
-    <script src="js/post.js"></script>
+    <script src="js/profil.js"></script>
 </body>
 
 </html>

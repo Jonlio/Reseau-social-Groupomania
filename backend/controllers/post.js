@@ -20,7 +20,8 @@ exports.createPost = (req, res) => {
 exports.getAllPosts = (req, res) => {
     models.Post.findAll({
         include: [{
-            model: models.User
+            model: models.User,
+            attributes: ['firstName']
         }]
     })
     .then(posts => {  return res.status(200).send(posts) })
