@@ -5,14 +5,17 @@
     color: #ffff
 }
 
+ a {
+text-decoration: none;
+    color: color: #ffff;
+}
+
 h2 {
     margin-bottom: 30px;
 }
 
-
-
 /*Formulaire*/
-.formulaire {
+.dataDisplay {
     max-width: 400px;
     margin: 60px auto;
 }

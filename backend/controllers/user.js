@@ -42,40 +42,40 @@ exports.login = (req, res) => {
 };
 
 //Affichage d'un profil
-exports.getProfile = (req, res) => {
-    const authorizationHeader = req.headers.authorization;
-    if(authorizationHeader){
+exports.getProfil = (req, res) => {
         const token = req.headers.authorization.split(' ')[1]; 
         result = jwt.verify(token, config.secret);
-    models.User.findOne({ where: { id: result.id } })
+        models.User.findOne({ where: { id: result.id },
+        include: [{ model: models.Post }] 
+    })
         .then(user => { return res.status(200).send(user) })
         .catch(error => res.status(400).json({ error }));
-}
+
 }
 
-//Modification du profil
-exports.modifyProfile = (req, res) => {
-    const userObject = req.file ? { ...JSON.parse(req.body.user), imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`} : { ...req.body };
-                models.User.update({ ...userObject }, { where: { id: req.params.id} })
-                .then(() => res.status(201).json({ message: 'Votre profil a été mis à jour!' }))
-                .catch(error => res.status(400).json({ error }));
-            }
-      
-//Suppression du profil
-exports.deleteProfile =  (req, res) => {
-    const authorizationHeader = req.headers.authorization;
-    if(authorizationHeader){
+exports.deleteProfil = async (req, res) => {
         const token = req.headers.authorization.split(' ')[1]; 
         result = jwt.verify(token, config.secret);
-    models.User.findOne({ where: { id: result.id} })
-        .then((user) => {
-            const filename = user.imageUrl.split('/images/')[1];
-            fs.unlink(`images/${filename}`, () => {
-                user.destroy()
-                    .then(() => res.status(200).json({ message: 'Profil supprimé !' }))
-                    .catch(error => res.status(400).json({ error }));
-            });
+        const user = await models.User.findOne({ where: {
+            id: result.id
+        }})
+        const filename = user.imageUrl.split('/images/')[1]
+        fs.unlink(`images/${filename}`, () => {
+            user.destroy()
+            .then(() => { res.status(200).json({ message: 'Profil supprimé !'}) })
+            .catch(error => res.status(500).json({ error }));
+
         })
-        .catch(error => res.status(500).json({ error }));
-};
-}
+        const posts = await models.Post.findAll({ where: {
+            userId: result.id
+        }})
+        posts.forEach(post => {
+            const postFilename = post.imageUrl.split('/images/')[1]
+            fs.unlink(`images/${postFilename}`, () => {
+                post.destroy()
+                .then(() => { res.status(200).json({ message: 'Posts supprimés !'}) })
+                .catch(error => res.status(500).json({ error }));
+            })
+        })
+        
+    }

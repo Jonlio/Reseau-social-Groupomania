@@ -11,20 +11,24 @@ async function getProfil() {
             },
         })
         let profil = await response.json();
+        console.log(profil)
 
         const div = document.getElementById('profil');
         const firstName = document.createElement('h3');
+        const email = document.createElement('p');
         const img = document.createElement('img');
 
         firstName.innerHTML += profil.firstName + ' ' + profil.lastName;
+        email.innerHTML += profil.email;
         img.src = profil.imageUrl;
 
         div.appendChild(firstName)
+        div.appendChild(email)
         div.appendChild(img)
 
     } catch (error) {
-        alert('Désolé, vous n\'avez pas accès à ce profil')
-        document.location.href = "index.html";
+       // alert('Désolé, vous n\'avez pas accès à ce profil')
+       // document.location.href = "index.html";
     }
 }
 
@@ -43,7 +47,6 @@ async function deleteProfil() {
         sessionStorage.clear();
         document.location.href = 'signup.html';
     }
-    //TO DO: Gérer la suppresion des posts et commentaires
 }
 
 getProfil()

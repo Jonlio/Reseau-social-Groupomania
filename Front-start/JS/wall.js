@@ -12,7 +12,9 @@ const createPost = async () => {
             e.preventDefault();
             if (content.value.length > 0) {
                 const formData = new FormData();
-                const post = { content: content.value }
+                const post = {
+                    content: content.value
+                }
                 formData.append('post', JSON.stringify(post))
                 if (fileField.files[0]) formData.append('image', fileField.files[0])
                 const response = await fetch(url, {
@@ -38,10 +40,11 @@ const displayPosts = async () => {
         const {
             User,
             content,
-            imageUrl, id
+            imageUrl,
+            id
         } = posts[i]
         renderPost(User, imageUrl, content, id)
-    } 
+    }
 }
 
 // Récupération datas posts
@@ -61,7 +64,7 @@ const getPosts = async (url) => {
 }
 
 const renderPost = (User, imageUrl, postContent, postId) => {
-    
+
     const section = document.getElementById('post');
     const div = document.createElement('div');
     div.classList.add("postDisplay");
@@ -69,29 +72,23 @@ const renderPost = (User, imageUrl, postContent, postId) => {
     const link = document.createElement('a');
     const textContent = document.createElement('p');
     const img = document.createElement('img');
-   
+
     firstName.innerHTML += User.firstName + ' à publié:';
     textContent.innerHTML += postContent;
     img.src = imageUrl;
-    
+
     section.appendChild(div);
     div.appendChild(firstName)
     div.appendChild(link)
     link.appendChild(textContent)
     link.appendChild(img)
     div.appendChild(link)
-    
-    link.addEventListener('click', function(e) {
-           sessionStorage.setItem('post', postId);
-           document.location.href = 'post.html'  
-        })
+
+    link.addEventListener('click', function (e) {
+        sessionStorage.setItem('post', postId);
+        document.location.href = 'post.html'
+    })
 }
 
 createPost();
 displayPosts();
-
-
-
-
-
-

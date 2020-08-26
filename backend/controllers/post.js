@@ -24,7 +24,7 @@ exports.getAllPosts = (req, res) => {
             attributes: ['firstName']
         }]
     })
-    .then(posts => {  return res.status(200).send(posts) })
+    .then(posts => { return res.status(200).send(posts) })
     .catch(error => res.status(400).json({ error }));
 }
 

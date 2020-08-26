@@ -4759,6 +4759,7 @@ input[type="button"].btn-block {
 
 .navbar {
     position: relative;
+    height: 5rem;
     display: -ms-flexbox;
     display: flex;
     -ms-flex-wrap: nowrap;
@@ -5141,7 +5142,7 @@ input[type="button"].btn-block {
 }
 
 .navbar-light .navbar-brand {
-    color: rgba(0, 0, 0, 0.9);
+    color: rgba(255, 255, 255, 1);
 }
 
 .navbar-light .navbar-brand:hover,
@@ -5150,7 +5151,7 @@ input[type="button"].btn-block {
 }
 
 .navbar-light .navbar-nav .nav-link {
-    color: rgba(0, 0, 0, 0.5);
+    color: rgba(255, 255, 255, 0.7);j
 }
 
 .navbar-light .navbar-nav .nav-link:hover,
@@ -5166,7 +5167,7 @@ input[type="button"].btn-block {
 .navbar-light .navbar-nav .active > .nav-link,
 .navbar-light .navbar-nav .nav-link.show,
 .navbar-light .navbar-nav .nav-link.active {
-    color: rgba(0, 0, 0, 0.9);
+    color: rgba(255, 255, 255, 1);
 }
 
 .navbar-light .navbar-toggler {
