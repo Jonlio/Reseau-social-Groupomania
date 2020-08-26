@@ -27,8 +27,8 @@ async function getProfil() {
         div.appendChild(img)
 
     } catch (error) {
-       // alert('Désolé, vous n\'avez pas accès à ce profil')
-       // document.location.href = "index.html";
+        alert('Désolé, vous n\'avez pas accès à ce profil')
+        document.location.href = "index.html";
     }
 }
 

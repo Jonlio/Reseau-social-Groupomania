@@ -116,5 +116,7 @@ async function postComment() {
     }
 }
 
+//TODO: Suppression commentaires
+
 getPost();
 displayComments();

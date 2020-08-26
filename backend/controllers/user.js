@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const models = require('../models');
 const fs = require('fs');
 const config = require('../config/auth.config');
+const auth = require('../middleware/auth')
 
 //Création d'un utilisateur
 exports.signup = (req, res) => {
@@ -46,11 +47,10 @@ exports.getProfil = (req, res) => {
         const token = req.headers.authorization.split(' ')[1]; 
         result = jwt.verify(token, config.secret);
         models.User.findOne({ where: { id: result.id },
-        include: [{ model: models.Post }] 
+        include: [{ model: models.Post }]
     })
         .then(user => { return res.status(200).send(user) })
         .catch(error => res.status(400).json({ error }));
-
 }
 
 exports.deleteProfil = async (req, res) => {
@@ -82,4 +82,5 @@ exports.deleteProfil = async (req, res) => {
             userId: result.id
         }})
         
+        //TO DO: Suppression des comments associés
     }
