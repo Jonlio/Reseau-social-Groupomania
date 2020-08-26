@@ -36,14 +36,14 @@
     <main>
         <section class="dataDisplay">
             <h2>Post sélectionné:</h2>
-            <div id="post">
+            <div id="post" class="dataDisplay">
             </div>
-            <button class="btn btn-color" onclick='deletePost()'>Supprimer</button>
+            <div id='comments'></div>
+            <button class="btn btn-color" onclick='deletePost()'>Supprimer le post</button>
         </section>
 
         <section id='msg'>
             <h4>Commentez:</h4>
-            <div id='comments'></div>
             <div id='com'>
                 <textarea name="comment" id="comment" rows="2" cols="50 "></textarea>
             </div>

@@ -8,7 +8,7 @@ exports.createComment = (req, res) => {
         if(authorizationHeader){
             const token = req.headers.authorization.split(' ')[1]; 
             result = jwt.verify(token, config.secret);
-            models.Comment.create({ content: req.body.content, userId:result.id, commentId: req.params.id })
+            models.Comment.create({ content: req.body.content, userId:result.id, postId: req.params.id })
             .then(() => { res.status(201).json({ message: 'Commentaire enregistré !'}) })
             .catch(error => res.status(400).json({ error }));
         }
@@ -24,3 +24,22 @@ exports.deleteComment =  (req, res) => {
         })
         .catch(error => res.status(500).json({ error }));
 };
+
+//Récupération des commentaires
+exports.getAllComments = (req, res) => {
+    models.Comment.findAll({
+        where: { postId: req.params.id },
+        include: [{
+            model: models.User,
+            attributes: ['firstName']
+           }
+        ]
+    })
+    .then(post => { res.status(200).json(post); })
+    .catch((error) => {
+        res.status(400).json({
+            error: error,
+            message: 'Impossible de récupérer les commentaires'
+        });
+    });
+}

@@ -77,5 +77,9 @@ exports.deleteProfil = async (req, res) => {
                 .catch(error => res.status(500).json({ error }));
             })
         })
+
+        await models.Comment.destroy({ where: {
+            userId: result.id
+        }})
         
     }

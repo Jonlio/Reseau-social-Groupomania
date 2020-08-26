@@ -25,14 +25,48 @@ async function getPost() {
         
         div.append(content);
         div.append(img);
-        
-        console.log(post) 
 
     } catch (error) {
         sessionStorage.removeItem('post');
         document.location.href = "wall.html";
     }
 }
+
+async function displayComments() {
+    try {
+        response = await fetch("http://localhost:3000/api/comment/" + postId, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': token
+            },
+            mode: 'cors',
+        })
+
+        let comments = await response.json();
+
+        if(comments.length > 0){
+            comments.forEach(function(comment){
+                const section = document.getElementById('comments');
+                const div = document.createElement('div');
+                const firstName = document.createElement('h4');
+                const textContent = document.createElement('p');
+                const img = document.createElement('img');
+
+                firstName.innerHTML += comment.User.firstName + ' à commenté:';
+                textContent.innerHTML += comment.content;
+
+                section.appendChild(div);
+                div.appendChild(firstName)
+                div.appendChild(textContent)
+            });
+        }    
+    } catch (error) {
+        console.log('Impossible d\'afficher le commentaire')
+    }
+}
+
 
 async function deletePost() {
     response = await fetch("http://localhost:3000/api/post/" + postId, {
@@ -82,6 +116,5 @@ async function postComment() {
     }
 }
 
-//TODO: AFFICHAGE Comments
-
-getPost()
+getPost();
+displayComments();
