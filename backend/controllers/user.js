@@ -15,7 +15,7 @@ exports.signup = (req, res) => {
             } 
                  bcrypt.hash(req.body.password, 10)
                     .then((hash) => {
-                        models.User.create({ ...userObject, password:hash, imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`})
+                        models.User.create({ ...userObject, isAdmin: false, password:hash, imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`})
                         .then(() => { res.status(201).json({ message: 'Profil enregistré !'}) })
                         .catch(error => res.status(400).json({ error }));
                     })
@@ -56,16 +56,11 @@ exports.getProfil = (req, res) => {
 exports.deleteProfil = async (req, res) => {
         const token = req.headers.authorization.split(' ')[1]; 
         result = jwt.verify(token, config.secret);
-        const user = await models.User.findOne({ where: {
-            id: result.id
-        }})
-        const filename = user.imageUrl.split('/images/')[1]
-        fs.unlink(`images/${filename}`, () => {
-            user.destroy()
-            .then(() => { res.status(200).json({ message: 'Profil supprimé !'}) })
-            .catch(error => res.status(500).json({ error }));
 
-        })
+        await models.Comment.destroy({ where: {
+            userId: result.id
+        }})
+
         const posts = await models.Post.findAll({ where: {
             userId: result.id
         }})
@@ -78,9 +73,14 @@ exports.deleteProfil = async (req, res) => {
             })
         })
 
-        await models.Comment.destroy({ where: {
-            userId: result.id
+        const user = await models.User.findOne({ where: {
+            id: result.id
         }})
-        
-        //TO DO: Suppression des comments associés
+        const filename = user.imageUrl.split('/images/')[1]
+        fs.unlink(`images/${filename}`, () => {
+            user.destroy()
+            .then(() => { res.status(200).json({ message: 'Profil supprimé !'}) })
+            .catch(error => res.status(500).json({ error }));
+
+        }) 
     }

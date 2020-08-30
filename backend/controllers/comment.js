@@ -10,21 +10,6 @@ exports.createComment = (req, res) => {
         .then(() => { res.status(201).json({ message: 'Commentaire enregistré !'}) })
         .catch(error => res.status(400).json({ error }));
     }
-    
-//Suppression d'un commentaire
-exports.deleteComment =  (req, res) => {
-    //TO DO: Authorization suppression des comments
-    /*const token = req.headers.authorization.split(' ')[1]; 
-    result = jwt.verify(token, config.secret);*/
-  
-    models.Comment.findOne({ where: { postid: req.params.id } })
-        .then(() => {
-             models.Comment.destroy()
-                .then(() => res.status(200).json({ message: 'Commentaire supprimé !' }))
-                .catch(error => res.status(400).json({ error }));  
-        })
-        .catch(error => res.status(500).json({ error }));
-};
 
 //Récupération des commentaires
 exports.getAllComments = (req, res) => {
@@ -38,3 +23,15 @@ exports.getAllComments = (req, res) => {
     .then(post => { res.status(200).json(post); })
     .catch((error) => { res.status(400).json({ error }) });
 }
+    
+//Suppression d'un commentaire
+exports.deleteComment =  (req, res) => {
+    models.Comment.findOne({ where: { id: req.params.id } })
+        .then((comment) => {
+             comment.destroy()
+                .then(() => res.status(200).json({ message: 'Commentaire supprimé !' }))
+                .catch(error => res.status(400).json({ error }));  
+        })
+        .catch(error => res.status(500).json({ error }));
+};
+

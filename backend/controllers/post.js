@@ -31,7 +31,7 @@ exports.getPost = (req, res) => {
         where: { id: req.params.id },
         include: [{
             model: models.User,
-            attributes: ['firstName']
+            attributes: ['firstName', 'id']
        }]
     })
     .then(post => { res.status(200).json(post); })
@@ -42,19 +42,19 @@ exports.getPost = (req, res) => {
 exports.deletePost =  (req, res) => {
     const token = req.headers.authorization.split(' ')[1]; 
     result = jwt.verify(token, config.secret);
-    
+   
     models.Post.findOne({ where: { id: req.params.id } })
         .then((post) => {
-            if (post.userId == result.id) {
+            if (post.userId == result.id  /*|| user.admin == true*/) {
+                models.Comment.destroy({ where: { postId: req.params.id }})
+                .then(() => res.status(200).json({ message: 'Commentaires associés supprimés!' }))
+                .catch(error => res.status(400).json({ error }));
             const filename = post.imageUrl.split('/images/')[1];
             fs.unlink(`images/${filename}`, () => {
                 post.destroy()
-                .then(() => res.status(200).json({ message: 'Publication supprimée !' }))
+                .then(() => res.status(200).json({ message: 'Publication supprimée!' }))
                 .catch(error => res.status(400).json({ error }));
             });
-            models.Comment.destroy({ where: { postId: req.params.id }})
-            .then(() => res.status(200).json({ message: 'Commentaires associés supprimés !' }))
-            .catch(error => res.status(400).json({ error }));
         }})
         .catch(error => res.status(500).json({ error }));
 };
