@@ -76,6 +76,7 @@ const renderPost = (User, imageUrl, postContent, postId) => {
     firstName.innerHTML += User.firstName + ' à publié:';
     textContent.innerHTML += postContent;
     img.src = imageUrl;
+    img.classList.add('imgPost');
 
     section.appendChild(div);
     div.appendChild(firstName)

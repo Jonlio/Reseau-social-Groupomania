@@ -49,13 +49,14 @@ async function getPost() {
 
         content.innerHTML += post.content;
         img.src = post.imageUrl;
+        img.classList.add('imgPost');
         
         div.append(content);
         div.append(img);
-        console.log(post)
+        
         if (post.userId !== user.id && user.isAdmin !== true ) {
            document.querySelector(".supp").style.visibility = "hidden";
-        } 
+        }
     } catch (error) {
         sessionStorage.removeItem('post');
         document.location.href = "wall.html";
@@ -64,21 +65,22 @@ async function getPost() {
 
 //Supprimer un post
 async function deletePost() {
+    try {
     response = await fetch("http://localhost:3000/api/post/" + postId, {
         method: 'DELETE',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             'Authorization': token
-        },
-        mode: 'cors',
+        }
     })
     await response.json();
     alert('Publication supprimée!')
     if (response.status === 200) {
         sessionStorage.removeItem('post')
         document.location.href = 'wall.html';
-    } else {
+    } }
+    catch (error) {
         window.location.reload()
     }
 }
@@ -100,7 +102,7 @@ async function postComment() {
             mode: 'cors',
             body: JSON.stringify(comment),
         })
-        let post = await response.json()
+        await response.json()
         if (response.status === 201) {
             window.location.reload()
         }
@@ -124,10 +126,12 @@ async function displayComments() {
                 const textContent = document.createElement('p');
                 const btn = document.createElement('button');
                 
-                div.classList.add('dataDisplay')
+                div.classList.add('dataDisplay','badge', 'badge-pill', 'badge-light');
+
                 firstName.innerHTML += comment.User.firstName + ' à commenté:';
                 textContent.innerHTML += comment.content;
-                btn.innerHTML += 'supprimer comment';
+                btn.innerHTML += 'supprimer';
+                btn.classList.add('btn','btn-outline-danger')
                 btn.addEventListener('click', function() {
                     deleteCom()
                 })

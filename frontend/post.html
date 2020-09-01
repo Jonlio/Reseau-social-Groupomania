@@ -34,20 +34,20 @@
     <!--Post-->
     <main>
         <section class="dataDisplay">
-            <h2>Post sélectionné:</h2>
+            <h2>Post sélectionné</h2>
             <div id="post" class="dataDisplay">
             </div>
+            <button class="btn btn-outline-danger supp" onclick='deletePost()'>Supprimer le post</button>
             <div id='comments'>
         </section>
 
-        <section id='msg'>
+        <section id='msg' class="dataDisplay">
             <h4>Commentez:</h4>
             <div id='com'>
-                <textarea name="comment" id="comment" rows="2" cols="50 "></textarea>
+                <textarea name="comment" class="input-area" id="comment" rows="2" cols="50 "></textarea>
             </div>
             <button class="btn btn-color" onclick='postComment()'>Commenter</button>
         </section>    
-        <button class="btn btn-color supp" onclick='deletePost()'>Supprimer le post</button>
     </main>
     
     <script src="JS/connexion.js"></script>

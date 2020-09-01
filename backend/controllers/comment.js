@@ -25,13 +25,19 @@ exports.getAllComments = (req, res) => {
 }
     
 //Suppression d'un commentaire
-exports.deleteComment =  (req, res) => {
-    models.Comment.findOne({ where: { id: req.params.id } })
-        .then((comment) => {
+exports.deleteComment = async (req, res) => {
+    const token = req.headers.authorization.split(' ')[1];
+    result = jwt.verify(token, config.secret);
+
+    let comment = await models.Comment.findOne({ where: { id: req.params.id } })
+    let admin = await models.User.findOne({ where: { isAdmin: true } })
+    
+    if (comment.userId == result.id || admin.id == result.id) {
              comment.destroy()
                 .then(() => res.status(200).json({ message: 'Commentaire supprimé !' }))
                 .catch(error => res.status(400).json({ error }));  
-        })
-        .catch(error => res.status(500).json({ error }));
+    } else {
+        console.error('Vous n\'etes pas autorisé à supprimer ce commentaire');
+    }
 };
 

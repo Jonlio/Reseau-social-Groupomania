@@ -22,9 +22,11 @@ async function getProfil() {
         email.innerHTML += profil.email;
         img.src = profil.imageUrl;
 
+        img.classList.add('rounded-circle','profilPic')
+
+        div.appendChild(img)
         div.appendChild(firstName)
         div.appendChild(email)
-        div.appendChild(img)
 
     } catch (error) {
         alert('Désolé, vous n\'avez pas accès à ce profil')

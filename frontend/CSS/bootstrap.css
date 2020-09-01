@@ -4669,6 +4669,7 @@ input[type="button"].btn-block {
     padding-left: 0;
     margin-bottom: 0;
     list-style: none;
+    border-bottom: 1px solid rgba(0,0,0,.1);
 }
 
 .nav-link {
@@ -4733,7 +4734,7 @@ input[type="button"].btn-block {
 .nav-pills .nav-link.active,
 .nav-pills .show > .nav-link {
     color: #fff;
-    background-color: #091f43;
+    background-color: #34495E;
 }
 
 .nav-fill .nav-item {
@@ -5644,8 +5645,7 @@ a.badge:focus {
 }
 
 .badge-pill {
-    padding-right: 0.6em;
-    padding-left: 0.6em;
+    padding: 1.5em;
     border-radius: 10rem;
 }
 

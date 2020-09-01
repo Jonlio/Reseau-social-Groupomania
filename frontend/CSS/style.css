@@ -1,18 +1,14 @@
+
 /*HEADER*/
 #logo{
     width: 18rem;
 }
 
-/*MAIN PAGE*/
+/*MAIN DISPLAY*/
 .navbar-bc-color,
 .btn-color {
-    background-color: #ba4e56;
+    background-color: #e74c3C;
     color: #ffff;
-}
-
- a {
-text-decoration: none;
-    color: color: #ffff;
 }
 
 h2 {
@@ -23,10 +19,10 @@ h2 {
     margin-bottom: 80px;
 }
 
-/*Formulaire*/
 .dataDisplay {
-    max-width: 400px;
+    max-width: 600px;
     margin: 50px auto;
+    word-wrap: break-word;
 }
 
 .formulaire .form-group {
@@ -40,4 +36,31 @@ h2 {
     opacity: 0.8;
 }
 
+.profilPic {
+    margin-bottom: 30px;
+    width: 225px;
+    height: 225px;
+}
 
+.imgPost {
+    width: 225px;
+    height: auto;
+}
+
+/*RESPONSIVE*/
+@media all and (max-width: 450px) {
+   #logo{
+    width: 14rem;
+}
+    
+    .dataDisplay {
+        margin: 50px 15px;
+
+    }
+
+    .input-area {
+       font-size: 14px;
+       width: 300px;
+    }
+
+}
