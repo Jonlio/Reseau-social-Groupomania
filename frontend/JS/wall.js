@@ -77,6 +77,7 @@ const renderPost = (User, imageUrl, postContent, postId) => {
     textContent.innerHTML += postContent;
     img.src = imageUrl;
     img.classList.add('imgPost');
+    img.alt = "image du post";
 
     section.appendChild(div);
     div.appendChild(firstName)

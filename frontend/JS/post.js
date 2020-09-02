@@ -50,6 +50,7 @@ async function getPost() {
         content.innerHTML += post.content;
         img.src = post.imageUrl;
         img.classList.add('imgPost');
+        img.alt = "image du post";
         
         div.append(content);
         div.append(img);

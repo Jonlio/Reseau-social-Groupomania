@@ -10,9 +10,9 @@ async function getProfil() {
                 'Authorization': token
             },
         })
-        
+
         let profil = await response.json();
-       
+
         const div = document.getElementById('profil');
         const firstName = document.createElement('h3');
         const email = document.createElement('p');
@@ -22,7 +22,8 @@ async function getProfil() {
         email.innerHTML += profil.email;
         img.src = profil.imageUrl;
 
-        img.classList.add('rounded-circle','profilPic')
+        img.classList.add('rounded-circle', 'profilPic');
+        img.alt = "photo de profil"
 
         div.appendChild(img)
         div.appendChild(firstName)
@@ -35,20 +36,25 @@ async function getProfil() {
 }
 
 async function deleteProfil() {
-    response = await fetch("http://localhost:3000/api/user", {
-        method: 'DELETE',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': token
-        },
-        mode: 'cors',
-    })
+    if (confirm("Êtes-vous sûr de vouloir supprimer votre profil?")) {
+        response = await fetch("http://localhost:3000/api/user", {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': token
+            },
+            mode: 'cors',
+        })
+        if (response.status === 200) {
+            sessionStorage.clear();
+            alert("Votre profil à été supprimé");
+            document.location.href = 'signup.html';
+        }
 
-    if (response.status === 200) {
-        sessionStorage.clear();
-        document.location.href = 'signup.html';
+    } else {
+        window.location.reload()
     }
 }
 
-getProfil()
+getProfil();

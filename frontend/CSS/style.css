@@ -25,6 +25,11 @@ h2 {
     word-wrap: break-word;
 }
 
+.displayForm {
+    display: flex;
+    flex-direction: column;
+}
+
 .formulaire .form-group {
     text-align: left;
 }
