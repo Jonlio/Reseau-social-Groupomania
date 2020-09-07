@@ -10,22 +10,22 @@ const createPost = async () => {
     btn.addEventListener('click', async (e) => {
         try {
             e.preventDefault();
-            if (content.value.length > 0) {
-                const formData = new FormData();
-                const post = {
-                    content: content.value
-                }
-                formData.append('post', JSON.stringify(post))
-                if (fileField.files[0]) formData.append('image', fileField.files[0])
+            const formData = new FormData();
+            const post = { content: content.value }
+            formData.append('post', JSON.stringify(post))
+            if (fileField.files[0]) {
+                formData.append('image', fileField.files[0])
                 const response = await fetch(url, {
-                    headers: {
-                        'Authorization': token
-                    },
+                    headers: { 'Authorization': token },
                     method: 'POST',
                     body: formData
                 })
-                window.location.reload(true)
-                return await response.json()
+                if (response.status !== 201) {
+                    alert('Format de la publication invalide')
+                } else {
+                    window.location.reload()
+                    return await response.json()
+                }
             }
         } catch (err) {
             throw new Error(err)
@@ -37,12 +37,7 @@ const createPost = async () => {
 const displayPosts = async () => {
     const posts = await getPosts(url);
     for (let i = posts.length - 1; i >= 0; i--) {
-        const {
-            User,
-            content,
-            imageUrl,
-            id
-        } = posts[i]
+        const { User, content, imageUrl, id } = posts[i]
         renderPost(User, imageUrl, content, id)
     }
 }

@@ -1,6 +1,5 @@
-
 /*HEADER*/
-#logo{
+#logo {
     width: 18rem;
 }
 
@@ -41,8 +40,13 @@ h2 {
     opacity: 0.8;
 }
 
+#profil {
+    max-width: 300px;
+    margin: auto;
+}
+
 .profilPic {
-    margin-bottom: 30px;
+    margin: 30px auto 30px auto;
     width: 225px;
     height: 225px;
 }
@@ -54,18 +58,16 @@ h2 {
 
 /*RESPONSIVE*/
 @media all and (max-width: 450px) {
-   #logo{
-    width: 14rem;
-}
-    
+    #logo {
+        width: 14rem;
+    }
+
     .dataDisplay {
         margin: 50px 15px;
-
     }
 
     .input-area {
-       font-size: 14px;
-       width: 300px;
+        font-size: 14px;
+        width: 300px;
     }
-
 }

@@ -6,10 +6,14 @@ const config = require('../config/auth.config');
 exports.createComment = (req, res) => {
     const token = req.headers.authorization.split(' ')[1]; 
     result = jwt.verify(token, config.secret);
+    const regexContent = /^[a-z.!?,'A-Z 0-9]*$/;
+    if ((!regexContent.test(req.body.content)) || (req.body.content.length == 0)) {
+        res.status(400).json({ message: 'Format non valide' })
+    } else {
     models.Comment.create({ content: req.body.content, userId:result.id, postId: req.params.id })
         .then(() => { res.status(201).json({ message: 'Commentaire enregistré !'}) })
         .catch(error => res.status(400).json({ error }));
-    }
+    }}
 
 //Récupération des commentaires
 exports.getAllComments = (req, res) => {

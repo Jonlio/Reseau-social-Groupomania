@@ -35,25 +35,52 @@ async function getProfil() {
     }
 }
 
-async function deleteProfil() {
-    if (confirm("Êtes-vous sûr de vouloir supprimer votre profil?")) {
-        response = await fetch("http://localhost:3000/api/user", {
-            method: 'DELETE',
+async function updateProfilPic() {
+    try {
+        let input = document.getElementById('imageUrl').value
+        const formData = new FormData()
+        formData.append('image', imageUrl.files[0])
+        if (input == 0) {
+        alert('Veuillez sélectionner une photo de profil')
+        } else {
+        const response = await fetch('http://localhost:3000/api/user/', {
+            method: 'PUT',
             headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
                 'Authorization': token
             },
-            mode: 'cors',
-        })
-        if (response.status === 200) {
-            sessionStorage.clear();
-            alert("Votre profil à été supprimé");
-            document.location.href = 'signup.html';
+            body: formData
+        })     
+        
+        if (response.status == 201){
+            window.location.reload();
         }
+    }} catch (error) {
+        alert('Modification de la photo impossible');
+        window.location.reload();
+    }       
+}
 
-    } else {
-        window.location.reload()
+async function deleteProfil() {
+    try {
+        if (confirm("Êtes-vous sûr de vouloir supprimer votre profil?")) {
+            response = await fetch("http://localhost:3000/api/user", {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': token
+                },
+                mode: 'cors',
+            })
+            if (response.status === 200) {
+                sessionStorage.clear();
+                alert("Votre profil à été supprimé");
+                document.location.href = 'signup.html';
+            }
+        }
+    } catch (error) {
+        alert('Désolé, vous ne pouvez pas supprimer ce profil')
+        document.location.href = "index.html";
     }
 }
 

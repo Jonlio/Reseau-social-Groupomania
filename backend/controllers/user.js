@@ -3,11 +3,23 @@ const jwt = require('jsonwebtoken');
 const models = require('../models');
 const fs = require('fs');
 const config = require('../config/auth.config');
-const auth = require('../middleware/auth')
 
 //Création d'un utilisateur
 exports.signup = (req, res) => {
-    const userObject = JSON.parse(req.body.user);
+    const securMail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,5})+$/;
+    const regexUser = /^[a-zA-Z]*$/;
+
+    const userObject = JSON.parse(req.body.user); 
+
+    if ((!regexUser.test(userObject.firstName)) || (!regexUser.test(userObject.lastName))) {
+        return res.status(401).json({ message: 'Format Nom et Prenom invalide'});
+    }
+    if (!securMail.test(userObject.email)) {
+        return res.status(401).json({ message: 'Format Email invalide'});
+    }
+    if (req.body.password.length < 7) {
+        return res.status(401).json({ message: 'Le MDP doit contenir 7 caractères minimum'});
+    }
     models.User.findOne({ where: { email: userObject.email } })
         .then(findUser => {
             if (findUser) {
@@ -16,7 +28,7 @@ exports.signup = (req, res) => {
                  bcrypt.hash(req.body.password, 10)
                     .then((hash) => {
                         models.User.create({ ...userObject, isAdmin: false, password:hash, imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`})
-                        .then(() => { res.status(201).json({ message: 'Profil enregistré !'}) })
+                        .then(() => { res.status(201).send({ message: 'Profil enregistré !'}) })
                         .catch(error => res.status(400).json({ error }));
                     })
                 .catch(error => res.status(500).json({ error }));
@@ -47,10 +59,21 @@ exports.getProfil = (req, res) => {
         const token = req.headers.authorization.split(' ')[1]; 
         result = jwt.verify(token, config.secret);
         models.User.findOne({ where: { id: result.id },
-        include: [{ model: models.Post }]
-    })
+            include: [{ model: models.Post }]
+        })
         .then(user => { return res.status(200).send(user) })
         .catch(error => res.status(400).json({ error }));
+}
+
+//Modifier photo de profil
+exports.updateProfil = async (req, res) => {   
+        const token = req.headers.authorization.split(' ')[1]; 
+        result = jwt.verify(token, config.secret);
+        const userObject = req.file ? { imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`} : { ...req.body };
+
+        await models.User.update({ ...userObject }, { where: { id: result.id } })
+        .then(() => { res.status(201).json({ message: 'Profil modifié !'}) })
+        .catch(error => res.status(500).json({ error }));   
 }
 
 //Suppression du profil

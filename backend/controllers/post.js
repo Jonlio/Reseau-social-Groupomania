@@ -8,10 +8,14 @@ exports.createPost = (req, res) => {
     const postObject = JSON.parse(req.body.post);
     const token = req.headers.authorization.split(' ')[1];
     result = jwt.verify(token, config.secret);
+    const regexPost = /^[a-z.!?,'A-Z 0-9]*$/;
+    if ((!regexPost.test(postObject.content)) || (postObject.content.length == 0)) {
+        res.status(400).json({ message: 'Format non valide' })
+    } else {
     models.Post.create({ ...postObject, userId: result.id, imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}` })
         .then(() => { res.status(201).json({ message: 'Publication enregistrée !' }) })
         .catch(error => res.status(400).json({ error }));
-}
+}}
 
 //Affichage de toutes les publications
 exports.getAllPosts = (req, res) => {

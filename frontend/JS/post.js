@@ -80,7 +80,7 @@ async function deletePost() {
     if (response.status === 200) {
         sessionStorage.removeItem('post')
         document.location.href = 'wall.html';
-    } }
+    }}
     catch (error) {
         window.location.reload()
     }
@@ -106,6 +106,8 @@ async function postComment() {
         await response.json()
         if (response.status === 201) {
             window.location.reload()
+        } else {
+            alert("Le format de votre commentaire n\'est pas accepté ")
         }
     } catch (error) {
         alert('impossible de commenter')

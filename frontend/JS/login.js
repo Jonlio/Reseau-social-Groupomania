@@ -1,5 +1,4 @@
 //Connexion de l'utilisateur
-
 const email = document.getElementById('email')
 const password = document.getElementById('password')
 const form = document.getElementById('form')
@@ -9,18 +8,19 @@ sessionStorage.clear();
 
 const postData = async (url, dataElt) => {
     const response = await fetch(url, {
-        headers: {
-            'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         method: 'POST',
         body: JSON.stringify(dataElt)
     })
-    return await response.json();
+    if (response.ok) {
+        return await response.json();
+    } else {
+        alert('Connexion impossible. Vérifiez vos identifiants')
+    }
 }
 
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
-
     const login = { email: email.value, password: password.value }
 
     const data = await postData(url, login);
@@ -30,4 +30,3 @@ form.addEventListener("submit", async (e) => {
     sessionStorage.setItem('token', data.token)
     window.location = `wall.html`;
 })
-
