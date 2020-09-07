@@ -53,6 +53,8 @@ async function updateProfilPic() {
         
         if (response.status == 201){
             window.location.reload();
+        } else {
+            alert('Le format de votre image n\'est pas valide')
         }
     }} catch (error) {
         alert('Modification de la photo impossible');
