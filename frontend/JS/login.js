@@ -15,7 +15,14 @@ const postData = async (url, dataElt) => {
     if (response.ok) {
         return await response.json();
     } else {
-        alert('Connexion impossible. Vérifiez vos identifiants')
+        if (response.status == 400) {
+            Swal.fire({
+                title: 'La connexion à échouée!',
+                text: 'Veuillez vérifier vos identifiants',
+                icon: 'error',
+                confirmButtonText: 'Ok'
+          })
+        }
     }
 }
 

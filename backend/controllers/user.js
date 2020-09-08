@@ -12,19 +12,19 @@ exports.signup = (req, res) => {
     const userObject = JSON.parse(req.body.user); 
 
     if ((!regexUser.test(userObject.firstName)) || (!regexUser.test(userObject.lastName))) {
-        return res.status(401).json({ message: 'Format Nom et Prenom invalide'});
+        return res.status(400).json({ message: 'Format Nom et Prenom invalide'});
     }
     if (!securMail.test(userObject.email)) {
-        return res.status(401).json({ message: 'Format Email invalide'});
+        return res.status(400).json({ message: 'Format Email invalide'});
     }
     if (req.body.password.length < 7) {
-        return res.status(401).json({ message: 'Le MDP doit contenir 7 caractères minimum'});
+        return res.status(400).json({ message: 'Le MDP doit contenir 7 caractères minimum'});
     }
     models.User.findOne({ where: { email: userObject.email } })
         .then(findUser => {
             if (findUser) {
                 return res.status(401).json({ message: 'Cet utilisateur est déjà enregistré' });
-            } 
+            } else {
                  bcrypt.hash(req.body.password, 10)
                     .then((hash) => {
                         models.User.create({ ...userObject, isAdmin: false, password:hash, imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`})
@@ -32,7 +32,7 @@ exports.signup = (req, res) => {
                         .catch(error => res.status(400).json({ error }));
                     })
                 .catch(error => res.status(500).json({ error }));
-        })
+        }})
 }
 
 //Connexion utilisateur
@@ -45,7 +45,7 @@ exports.login = (req, res) => {
             bcrypt.compare(req.body.password, user.password)
                 .then(valid => {
                     if (!valid) {
-                      return res.status(401).json({ error: 'Mot de passe incorrect!' });
+                      return res.status(400).json({ error: 'Mot de passe incorrect!' });
                     }
                     return res.status(200).json({ token: jwt.sign({ id: user.id }, config.secret, { expiresIn: '24h'}) });
                 })

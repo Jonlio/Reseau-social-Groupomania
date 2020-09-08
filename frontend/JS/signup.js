@@ -22,11 +22,32 @@ form.addEventListener("submit", async (e) => {
             body: formData
         })     
 
-        if (response.status == 201){
+        if (response.status == 201) {
         window.location = 'index.html';
-        } else {
-            alert('Veuillez vérifier le format de vos données');
-            window.location.reload();
+        }
+        if (response.status == 400) {
+            Swal.fire({
+                title: 'Format non valide!',
+                text: 'Veuillez vérifier le format de vos données',
+                icon: 'warning',
+                confirmButtonText: 'Ok'
+          })
+        } 
+        if (response.status == 401) {
+            Swal.fire({
+                title: 'Inscription impossible!',
+                text: 'Adresse email déjà utilisée',
+                icon: 'warning',
+                confirmButtonText: 'Ok'
+          })
+        } 
+        if (response.status == 500) {
+            Swal.fire({
+                title: 'Format image non valide!',
+                text: 'Formats supportés: JPG/JPEG/PNG',
+                icon: 'warning',
+                confirmButtonText: 'Ok'
+          })
         }       
     } catch (err) {
         throw new Error(err)

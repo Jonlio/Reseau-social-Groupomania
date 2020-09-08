@@ -41,7 +41,13 @@ async function updateProfilPic() {
         const formData = new FormData()
         formData.append('image', imageUrl.files[0])
         if (input == 0) {
-        alert('Veuillez sélectionner une photo de profil')
+            Swal.fire({
+                position: 'top-end',
+                icon: 'warning',
+                title: 'Veuillez sélectionner une image',
+                showConfirmButton: false,
+                timer: 1500
+              })
         } else {
         const response = await fetch('http://localhost:3000/api/user/', {
             method: 'PUT',
@@ -54,7 +60,13 @@ async function updateProfilPic() {
         if (response.status == 201){
             window.location.reload();
         } else {
-            alert('Le format de votre image n\'est pas valide')
+          Swal.fire({
+            position: 'top-end',
+            icon: 'warning',
+            title: 'Format image non valide',
+            showConfirmButton: false,
+            timer: 1500
+          })
         }
     }} catch (error) {
         alert('Modification de la photo impossible');
@@ -76,7 +88,6 @@ async function deleteProfil() {
             })
             if (response.status === 200) {
                 sessionStorage.clear();
-                alert("Votre profil à été supprimé");
                 document.location.href = 'signup.html';
             }
         }

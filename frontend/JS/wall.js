@@ -21,7 +21,13 @@ const createPost = async () => {
                     body: formData
                 })
                 if (response.status !== 201) {
-                    alert('Format de la publication invalide')
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'warning',
+                        title: 'Format non valide!',
+                        showConfirmButton: false,
+                        timer: 1500
+                      })
                 } else {
                     window.location.reload()
                     return await response.json()

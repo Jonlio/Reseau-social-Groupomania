@@ -71,3 +71,9 @@ h2 {
         width: 300px;
     }
 }
+
+@media all and (max-width: 350px) {
+    .input-area {
+        font-size: 12px;
+    }
+}

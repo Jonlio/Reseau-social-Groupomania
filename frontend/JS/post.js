@@ -76,7 +76,7 @@ async function deletePost() {
         }
     })
     await response.json();
-    alert('Publication supprimée!')
+
     if (response.status === 200) {
         sessionStorage.removeItem('post')
         document.location.href = 'wall.html';
@@ -107,7 +107,13 @@ async function postComment() {
         if (response.status === 201) {
             window.location.reload()
         } else {
-            alert("Le format de votre commentaire n\'est pas accepté ")
+            Swal.fire({
+                position: 'top-end',
+                icon: 'warning',
+                title: 'Format du commentaire non valide!',
+                showConfirmButton: false,
+                timer: 1500
+              })
         }
     } catch (error) {
         alert('impossible de commenter')
@@ -155,7 +161,6 @@ async function displayComments() {
                         'Authorization': token
                     }})
                     let post = await response.json();   
-                    alert(post.message)
                     window.location.reload()
                 } 
     });
