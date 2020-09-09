@@ -39,15 +39,6 @@ const createPost = async () => {
     })
 }
 
-// Affichage des posts
-const displayPosts = async () => {
-    const posts = await getPosts(url);
-    for (let i = posts.length - 1; i >= 0; i--) {
-        const { User, content, imageUrl, id } = posts[i]
-        renderPost(User, imageUrl, content, id)
-    }
-}
-
 // Récupération datas posts
 const getPosts = async (url) => {
     try {
@@ -64,24 +55,33 @@ const getPosts = async (url) => {
     }
 }
 
+// Affichage des posts
+const displayPosts = async () => {
+    const posts = await getPosts(url);
+    for (let i = posts.length - 1; i >= 0; i--) {
+        const { User, content, imageUrl, id } = posts[i]
+        renderPost(User, imageUrl, content, id)
+    }
+}
+
 const renderPost = (User, imageUrl, postContent, postId) => {
 
     const section = document.getElementById('post');
     const div = document.createElement('div');
     div.classList.add("postDisplay");
-    const firstName = document.createElement('h3');
+    const name = document.createElement('h3');
     const link = document.createElement('a');
     const textContent = document.createElement('p');
     const img = document.createElement('img');
 
-    firstName.innerHTML += User.firstName + ' à publié:';
+    name.innerHTML += User.firstName + ' à publié:';
     textContent.innerHTML += postContent;
     img.src = imageUrl;
     img.classList.add('imgPost');
     img.alt = "image du post";
 
     section.appendChild(div);
-    div.appendChild(firstName)
+    div.appendChild(name)
     div.appendChild(link)
     link.appendChild(textContent)
     link.appendChild(img)

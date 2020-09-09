@@ -65,6 +65,17 @@ exports.getProfil = (req, res) => {
         .catch(error => res.status(400).json({ error }));
 }
 
+//Affichage de tous les profils
+exports.getAllProfils = (req, res) => {
+    const token = req.headers.authorization.split(' ')[1]; 
+    result = jwt.verify(token, config.secret);
+    models.User.findAll({ 
+        include: [{ model: models.Post }, { model: models.Comment }],   
+    })
+    .then(users => { return res.status(200).send(users) })
+    .catch(error => res.status(400).json({ error }));
+}
+
 //Modifier photo de profil
 exports.updateProfil = async (req, res) => {   
         const token = req.headers.authorization.split(' ')[1]; 

@@ -29,6 +29,10 @@ h2 {
     flex-direction: column;
 }
 
+.userDisplay{
+    margin: 30px auto 30px auto;
+}
+
 .formulaire .form-group {
     text-align: left;
 }
