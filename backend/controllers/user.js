@@ -70,20 +70,19 @@ exports.getAllProfils = (req, res) => {
     const token = req.headers.authorization.split(' ')[1]; 
     result = jwt.verify(token, config.secret);
     models.User.findAll({ 
-        include: [{ model: models.Post }, { model: models.Comment }], 
-        attributes: ['firstName', 'lastName']  
+        include: [{ model: models.Post }, { model: models.Comment }],   
     })
     .then(users => { return res.status(200).send(users) })
     .catch(error => res.status(400).json({ error }));
 }
 
 //Modifier photo de profil
-exports.updateProfil = (req, res) => {   
+exports.updateProfil = async (req, res) => {   
         const token = req.headers.authorization.split(' ')[1]; 
         result = jwt.verify(token, config.secret);
         const userObject = req.file ? { imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`} : { ...req.body };
 
-        models.User.update({ ...userObject }, { where: { id: result.id } })
+        await models.User.update({ ...userObject }, { where: { id: result.id } })
         .then(() => { res.status(201).json({ message: 'Profil modifié !'}) })
         .catch(error => res.status(500).json({ error }));   
 }

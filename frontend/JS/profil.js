@@ -115,7 +115,7 @@ async function adminVue() {
         
         let users = await response.json()
         
-        users.forEach(function(user) {
+        users.forEach(function(user){
        
         let userPosts = user.Posts
         let lastPost = userPosts[userPosts.length - 1]
@@ -133,20 +133,10 @@ async function adminVue() {
 
         title.innerHTML += 'Dernières participations des utilisateurs'
         fullName.innerHTML += user.firstName + ' ' + user.lastName
-
-        if ((userPosts.length !== 0) && (userComments.length !== 0)) {
+        if(userPosts.length !== 0) {
         userPost.textContent += 'Dernier post: ' + lastPost.content 
         userComment.textContent += 'Dernier commentaire: ' + lastComment.content
-        }
-        if ((userPosts.length !== 0) && (userComments.length == 0)) {
-            userPost.textContent += 'Dernier post: ' + lastPost.content 
-            userComment.textContent += 'Pas encore de commentaire'
-        }
-        if ((userPosts.length == 0) && (userComments.length !== 0)) {
-            userPost.textContent += 'Pas encore de post' 
-            userComment.textContent += 'Dernier commentaire: ' + lastComment.content
-        } 
-        if ((userPosts.length == 0) && (userComments.length == 0)) {
+        } else {
         userPost.textContent += 'Pas encore de post'
         userComment.textContent += 'Pas encore de commentaire'
         }
@@ -161,8 +151,8 @@ async function adminVue() {
         document.getElementById('admin').style.visibility='hidden';
     }
 } catch (error) {
-    document.location.href = "wall.html";
-}
+        document.location.href = "wall.html";
+    }
 }
 
 displayProfil();
