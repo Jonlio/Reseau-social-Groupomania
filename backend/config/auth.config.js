@@ -1,1 +1,0 @@
-module.exports = { secret: 'NsKDjb$ZkC5Xs7yL'};
