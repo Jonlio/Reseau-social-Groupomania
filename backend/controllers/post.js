@@ -4,12 +4,12 @@ const jwt = require('jsonwebtoken');
 const config = require('../config/auth.config');
 
 //Création d'une publication
-exports.createPost = (req, res) => {
+exports.createPost =  (req, res) => {
     const postObject = JSON.parse(req.body.post);
     const token = req.headers.authorization.split(' ')[1];
     result = jwt.verify(token, config.secret);
-    const regexPost = /^[a-z.!?,'A-Z 0-9]*$/;
-    if ((!regexPost.test(postObject.content)) || (postObject.content.length == 0)) {
+    const regexPost = /<(.*)>/;
+    if ((regexPost.test(postObject.content)) || (postObject.content.length == 0)) {
         res.status(400).json({ message: 'Format non valide' })
     } else {
     models.Post.create({ ...postObject, userId: result.id, imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}` })

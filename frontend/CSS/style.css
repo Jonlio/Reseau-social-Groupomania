@@ -14,6 +14,10 @@ h2 {
     margin-bottom: 30px;
 }
 
+#post h3 {
+    margin-bottom: 20px;
+}
+
 .postDisplay {
     margin-bottom: 80px;
 }
@@ -56,7 +60,7 @@ h2 {
 }
 
 .imgPost {
-    width: 225px;
+    width: 400px;
     height: auto;
 }
 
@@ -72,8 +76,12 @@ h2 {
 
     .input-area {
         font-size: 14px;
-        width: 300px;
+        width: 280px;
     }
+    .imgPost {
+        width: 225px;
+        height: auto;
+}
 }
 
 @media all and (max-width: 350px) {
