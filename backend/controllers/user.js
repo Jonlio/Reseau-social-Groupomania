@@ -66,50 +66,53 @@ exports.getProfil = (req, res) => {
 }
 
 //Affichage de tous les profils
-exports.getAllProfils = (req, res) => {
+exports.getAllProfils = async (req, res) => {
     const token = req.headers.authorization.split(' ')[1]; 
     result = jwt.verify(token, config.secret);
-    models.User.findAll({ 
-        include: [{ model: models.Post }, { model: models.Comment }],
-        attributes: ['firstName', 'lastName']  
+    const admin = await models.User.findOne({ where: { isAdmin: true } })
+  
+    if (result.id == admin.id) {
+       await models.User.findAll({ 
+          include: [{ model: models.Post }, { model: models.Comment }],
+          attributes: ['firstName', 'lastName']  
     })
     .then(users => { return res.status(200).send(users) })
     .catch(error => res.status(400).json({ error }));
-}
+}}
 
 //Modifier photo de profil
 exports.updateProfil = async (req, res) => {   
-        const token = req.headers.authorization.split(' ')[1]; 
-        result = jwt.verify(token, config.secret);
-        const userObject = req.file ? { imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`} : { ...req.body };
+    const token = req.headers.authorization.split(' ')[1]; 
+    result = jwt.verify(token, config.secret);
+    const userObject = req.file ? { imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`} : { ...req.body };
 
-        await models.User.update({ ...userObject }, { where: { id: result.id } })
-        .then(() => { res.status(201).json({ message: 'Profil modifié !'}) })
-        .catch(error => res.status(500).json({ error }));   
+    await models.User.update({ ...userObject }, { where: { id: result.id } })
+    .then(() => { res.status(201).json({ message: 'Profil modifié !'}) })
+    .catch(error => res.status(400).json({ error }));   
 }
 
 //Suppression du profil
 exports.deleteProfil = async (req, res) => {
-        const token = req.headers.authorization.split(' ')[1]; 
-        result = jwt.verify(token, config.secret);
+    const token = req.headers.authorization.split(' ')[1]; 
+    result = jwt.verify(token, config.secret);
 
-        await models.Comment.destroy({ where: { userId: result.id }})
+    await models.Comment.destroy({ where: { userId: result.id }})
 
-        const posts = await models.Post.findAll({ where: { userId: result.id }})
-        posts.forEach(post => {
-            const postFilename = post.imageUrl.split('/images/')[1]
-            fs.unlink(`images/${postFilename}`, () => {
-                post.destroy()
-                .then(() => { res.status(200).json({ message: 'Posts supprimés !'}) })
-                .catch(error => res.status(500).json({ error }));
-            })
-        })
-
-        const user = await models.User.findOne({ where: { id: result.id }})
-        const filename = user.imageUrl.split('/images/')[1]
-        fs.unlink(`images/${filename}`, () => {
-            user.destroy()
-            .then(() => { res.status(200).json({ message: 'Profil supprimé !'}) })
+    const posts = await models.Post.findAll({ where: { userId: result.id }})
+    posts.forEach(post => {
+        const postFilename = post.imageUrl.split('/images/')[1]
+        fs.unlink(`images/${postFilename}`, () => {
+            post.destroy()
+            .then(() => { res.status(200).json({ message: 'Posts supprimés !'}) })
             .catch(error => res.status(500).json({ error }));
-        }) 
-    }
+        })
+    })
+
+    const user = await models.User.findOne({ where: { id: result.id }})
+    const filename = user.imageUrl.split('/images/')[1]
+    fs.unlink(`images/${filename}`, () => {
+        user.destroy()
+        .then(() => { res.status(200).json({ message: 'Profil supprimé !'}) })
+        .catch(error => res.status(400).json({ error }));
+    }) 
+}

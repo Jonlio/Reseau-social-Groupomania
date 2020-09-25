@@ -1,18 +1,24 @@
 const models = require('../models');
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
-const config = require('../config/auth.config');
+const sanitizeHtml = require('sanitize-html');
+const config = require('../config/auth.config'); 
 
 //Création d'une publication
 exports.createPost =  (req, res) => {
-    const postObject = JSON.parse(req.body.post);
     const token = req.headers.authorization.split(' ')[1];
     result = jwt.verify(token, config.secret);
-    const regexPost = /<(.*)>/;
-    if ((regexPost.test(postObject.content)) || (postObject.content.length == 0)) {
+    
+    const postObject = JSON.parse(req.body.post);
+    let cleanPost = sanitizeHtml(postObject.content,{
+        allowedTags: [],
+        allowedAttributes: {}
+    })
+    
+    if (cleanPost.length == 0) {
         res.status(400).json({ message: 'Format non valide' })
     } else {
-    models.Post.create({ ...postObject, userId: result.id, imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}` })
+    models.Post.create({ ...postObject, content: cleanPost, userId: result.id, imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}` })
         .then(() => { res.status(201).json({ message: 'Publication enregistrée !' }) })
         .catch(error => res.status(400).json({ error }));
 }}
@@ -54,8 +60,6 @@ exports.deletePost = async (req, res) => {
 
     if (post.userId == result.id || admin.id == result.id) {
         models.Comment.destroy({ where: { postId: req.params.id }})
-        .then(() => res.status(200).json({ message: 'Commentaires associés supprimés!' }))
-        .catch(error => res.status(400).json({ error }));
         const filename = post.imageUrl.split('/images/')[1];
         fs.unlink(`images/${filename}`, () => {
             post.destroy()

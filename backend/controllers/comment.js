@@ -1,19 +1,25 @@
 const models = require('../models');
 const jwt = require('jsonwebtoken');
+const sanitizeHtml = require('sanitize-html');
 const config = require('../config/auth.config');
 
 //Création d'un commentaire
 exports.createComment = (req, res) => {
     const token = req.headers.authorization.split(' ')[1]; 
     result = jwt.verify(token, config.secret);
-    const regexContent = /<(.*)>/;
-    if ((regexContent.test(req.body.content)) || (req.body.content.length == 0)) {
+    let cleanComment = sanitizeHtml(req.body.content, {
+        allowedTags: [],
+        allowedAttributes: {}
+    })
+    
+    if (cleanComment.length == 0) {
         res.status(400).json({ message: 'Format non valide' })
     } else {
-    models.Comment.create({ content: req.body.content, userId:result.id, postId: req.params.id })
+    models.Comment.create({ content: cleanComment, userId:result.id, postId: req.params.id })
         .then(() => { res.status(201).json({ message: 'Commentaire enregistré !'}) })
         .catch(error => res.status(400).json({ error }));
-    }}
+    }
+}
 
 //Récupération des commentaires
 exports.getAllComments = (req, res) => {

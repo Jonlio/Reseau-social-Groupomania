@@ -1,5 +1,5 @@
-const connexion = document.getElementById('connexion');
- window.addEventListener('load', () => {
+document.getElementById('connexion');
+window.addEventListener('load', () => {
     if(!sessionStorage.getItem('token')) {
         window.location.replace('index.html')
     }
